@@ -1,0 +1,63 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+/frontend/node_modules/
+
+# Expo
+/frontend/.expo/
+/frontend/dist/
+/frontend/web-build/
+/frontend/expo-env.d.ts
+
+# Native
+/frontend/*.orig.*
+/frontend/*.jks
+/frontend/*.p8
+/frontend/*.p12
+/frontend/*.key
+/frontend/*.mobileprovision
+
+# Metro
+/frontend/.metro-health-check*
+
+# debug
+/frontend/npm-debug.*
+/frontend/yarn-debug.*
+/frontend/yarn-error.*
+
+# macOS
+/frontend/.DS_Store
+/frontend/*.pem
+
+# local env files
+/frontend/.env*.local
+
+# typescript
+/frontend/*.tsbuildinfo
+
+/frontend/app-example
+
+#backend
+/backend/.phpunit.cache
+/backend/node_modules
+/backend/public/build
+/backend/public/hot
+/backend/public/storage
+/backend/storage/*.key
+/backend/storage/pail
+/backend/vendor
+/backend/.env
+/backend/.env.backup
+/backend/.env.production
+/backend/.phpactor.json
+/backend/.phpunit.result.cache
+/backend/Homestead.json
+/backend/Homestead.yaml
+/backend/npm-debug.log
+/backend/yarn-error.log
+/backend/auth.json
+/backend/.fleet
+/backend/.idea
+/backend/.nova
+/backend/.vscode
+/backend/.zed
