@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
@@ -22,11 +23,9 @@ class TransactionController extends Controller
 
             return response()->json($transactions->get());
 
-
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
-
     }
 
     public function store(Request $request)
@@ -38,15 +37,15 @@ class TransactionController extends Controller
                 'description' => 'required|string',
             ]);
 
-            $transaction = Transaction::create($request->all());
+            $transaction = DB::transaction(function () use ($request) {
+                return Transaction::create($request->all());
+            });
 
             return response()->json($transaction, 201);
-
 
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
-
     }
 
     public function show($id)
@@ -57,35 +56,36 @@ class TransactionController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
-
     }
 
     public function update(Request $request, $id)
     {
-
         try {
-            $transaction = Transaction::findOrFail($id);
-            $transaction->update($request->all());
-    
-            return response()->json($transaction);;
+            $transaction = DB::transaction(function () use ($request, $id) {
+                $transaction = Transaction::findOrFail($id);
+                $transaction->update($request->all());
+                return $transaction;
+            });
 
+            return response()->json($transaction);
 
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
-
     }
 
     public function destroy($id)
     {
         try {
-            Transaction::findOrFail($id)->delete();
+            DB::transaction(function () use ($id) {
+                $transaction = Transaction::findOrFail($id);
+                $transaction->delete();
+            });
 
             return response()->json(['message' => 'Transaction deleted successfully']);
 
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
-
     }
 }
