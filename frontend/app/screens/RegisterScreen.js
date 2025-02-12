@@ -7,6 +7,7 @@ import AppText from '../components/AppText'
 import routes from '../navigation/routes'
 import AuthContext from '../auth/context'
 import ErrorMessage from '../components/ErrorMessage'
+import { API_URL } from '@env';
 
 export default function RegisterScreen({ navigation }) {
     const [email, setEmail] = useState('')
@@ -47,7 +48,7 @@ export default function RegisterScreen({ navigation }) {
         if (validateForms()) return;
     
         try {
-            const response = await fetch('http://192.168.1.106:8000/api/register', {
+            const response = await fetch(`${API_URL}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

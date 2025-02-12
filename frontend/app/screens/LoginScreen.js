@@ -8,6 +8,8 @@ import routes from '../navigation/routes';
 import ErrorMessage from '../components/ErrorMessage';
 import AuthContext from '../auth/context';
 import authStorage from '../auth/authStorage';
+import { API_URL } from '@env';
+
 
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('');
@@ -33,7 +35,7 @@ export default function LoginScreen({ navigation }) {
         if (validateForms()) return;
 
         try {
-            const response = await fetch('http://192.168.1.106:8000/api/login', {
+            const response = await fetch(`${API_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })

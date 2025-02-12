@@ -5,6 +5,7 @@ import Screen from '../components/Screen';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Import for "X" icon
 import authStorage from '../auth/authStorage'
+import { API_URL } from '@env';
 
 export default function PhotosScreen() {
     const [transactions, setTransactions] = useState([]);
@@ -26,7 +27,7 @@ export default function PhotosScreen() {
 
     const fetchTransactions = async () => {
         try {
-            const response = await axios.get('http://192.168.1.106:8000/api/transactions');
+            const response = await axios.get(`${API_URL}/transactions`);
             setTransactions(response.data);
         } catch (error) {
             Alert.alert('Error', 'Unable to fetch transactions');
@@ -44,7 +45,7 @@ export default function PhotosScreen() {
 
     const handleAddTransaction = async () => {
         try {
-            const response = await axios.post('http://192.168.1.106:8000/api/transactions', newTransaction);
+            const response = await axios.post(`${API_URL}/transactions`, newTransaction);
             setTransactions(prev => [...prev, response.data]);
             setIsModalVisible(false);
             setNewTransaction({ date: '', description: '', amount: '' });
@@ -59,7 +60,7 @@ export default function PhotosScreen() {
 
     const handleDeleteTransaction = async (transactionId) => {
         try {
-            await axios.delete(`http://192.168.1.106:8000/api/transactions/${transactionId}`);
+            await axios.delete(`${API_URL}/transactions/${transactionId}`);
             setTransactions(transactions.filter((item) => item.id !== transactionId));
             setSelectedTransaction(null);
         } catch (error) {
