@@ -1,4 +1,4 @@
-import { StyleSheet, Alert, Text, TouchableOpacity } from 'react-native'
+import { StyleSheet, Alert, Text, TouchableOpacity, Platform } from 'react-native'
 import React, { useState, useContext } from 'react'
 import Screen from '../components/Screen'
 import AppButton from '../components/AppButton'
@@ -14,6 +14,7 @@ export default function RegisterScreen({ navigation }) {
     const [name, setName] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+    const [device_name, setDeviceName] = useState('');
     const [registerError, setRegisterError] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
     const authContext = useContext(AuthContext)
@@ -55,7 +56,9 @@ export default function RegisterScreen({ navigation }) {
                     name,
                     email,
                     password,
-                    password_confirmation: confirmPassword
+                    password_confirmation: confirmPassword,
+                    device_name: `${Platform.OS} ${Platform.Version}`
+                    
                 })
             });
     

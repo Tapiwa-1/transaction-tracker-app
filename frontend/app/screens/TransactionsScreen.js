@@ -19,15 +19,25 @@ export default function PhotosScreen() {
         amount: '',
     });
 
-    const token = authStorage.getToken() ; // Retrieve this token from local storage or auth context
 
     // Set default headers with the Bearer token for all axios requests
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    axios.defaults.headers.common['Authorization'] = `Bearer 32|3sh7ZdKnwgGzjhcNc31FCoSCVXGHcjSHgBU4QgJf1189c20c`;
     
 
     const fetchTransactions = async () => {
         try {
-            const response = await axios.get(`${API_URL}/transactions`);
+            const token = await authStorage.getToken(); // Fetch the token
+            if (!token) {
+                Alert.alert('Error', 'No authentication token found');
+                return;
+            }
+    
+            const response = await axios.get(`${API_URL}/transactions`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+    
             setTransactions(response.data);
         } catch (error) {
             Alert.alert('Error', 'Unable to fetch transactions');
@@ -45,7 +55,18 @@ export default function PhotosScreen() {
 
     const handleAddTransaction = async () => {
         try {
-            const response = await axios.post(`${API_URL}/transactions`, newTransaction);
+            const token = await authStorage.getToken();
+            if (!token) {
+                Alert.alert('Error', 'No authentication token found');
+                return;
+            }
+    
+            const response = await axios.post(`${API_URL}/transactions`, newTransaction, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+    
             setTransactions(prev => [...prev, response.data]);
             setIsModalVisible(false);
             setNewTransaction({ date: '', description: '', amount: '' });
@@ -60,7 +81,18 @@ export default function PhotosScreen() {
 
     const handleDeleteTransaction = async (transactionId) => {
         try {
-            await axios.delete(`${API_URL}/transactions/${transactionId}`);
+            const token = await authStorage.getToken();
+            if (!token) {
+                Alert.alert('Error', 'No authentication token found');
+                return;
+            }
+    
+            await axios.delete(`${API_URL}/transactions/${transactionId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+    
             setTransactions(transactions.filter((item) => item.id !== transactionId));
             setSelectedTransaction(null);
         } catch (error) {
@@ -278,3 +310,4 @@ const styles = StyleSheet.create({
         width: '100%',
     },
 });
+

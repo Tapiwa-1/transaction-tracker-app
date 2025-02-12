@@ -1,27 +1,39 @@
 import { StyleSheet, Alert } from 'react-native';
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialIcon from '../components/MaterialIcon';
 import routes from './routes';
 import TransactionsScreen from '../screens/TransactionsScreen';
+import { API_URL } from '@env';
 
 import { useNavigation } from '@react-navigation/native';
 import authStorage from '../auth/authStorage';
-import AuthContext from '../auth/context'
-
+import AuthContext from '../auth/context';
 
 const Tab = createBottomTabNavigator();
 
 const LogoutScreen = () => {
     const navigation = useNavigation();
-    const authContext = useContext(AuthContext)
-    React.useEffect(() => {
+    const authContext = useContext(AuthContext);
+
+    useEffect(() => {
         const handleLogout = async () => {
             try {
-                await authStorage.removeToken(); // Remove the token
-                await fetch('http://192.168.1.106:8000/api/logout', {
+                // Retrieve the stored token
+                const token = await authStorage.getToken();
+
+                if (!token) throw new Error('No authentication token found');
+
+                // Send logout request with Bearer token
+                await fetch(`${API_URL}/logout`, {
                     method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
                 });
+
+                // Show success alert and navigate to login screen
                 Alert.alert('Logged Out', 'You have been logged out successfully.', [
                     {
                         text: 'OK',
@@ -39,7 +51,7 @@ const LogoutScreen = () => {
         handleLogout();
     }, []);
 
-    return null; // No UI needed, just handle logout
+    return null; // No UI needed
 };
 
 const AppNavigator = () => {
@@ -67,3 +79,4 @@ const AppNavigator = () => {
 export default AppNavigator;
 
 const styles = StyleSheet.create({});
+

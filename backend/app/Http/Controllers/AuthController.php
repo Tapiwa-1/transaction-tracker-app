@@ -24,7 +24,7 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
-            $token = $user->createToken('auth_token')->plainTextToken;
+            $token = $user->createToken($request->device_name)->plainTextToken;
 
             return response()->json(['token' => $token], 201);
         } catch (\Exception $e) {
@@ -45,7 +45,7 @@ class AuthController extends Controller
             }
 
             $user = Auth::user();
-            $token = $user->createToken('auth_token')->plainTextToken;
+            $token = $user->createToken($request->device_name)->plainTextToken;
 
             return response()->json(['token' => $token,'user' => $user]);
         } catch (\Exception $e) {

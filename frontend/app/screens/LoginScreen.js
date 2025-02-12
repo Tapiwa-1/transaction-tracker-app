@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Platform } from 'react-native';
 import React, { useContext, useState } from 'react';
 import Screen from '../components/Screen';
 import AppButton from '../components/AppButton';
@@ -14,6 +14,7 @@ import { API_URL } from '@env';
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [device_name, setDeviceName] = useState('');
     const [loginError, setLoginError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const authContext = useContext(AuthContext);
@@ -38,7 +39,7 @@ export default function LoginScreen({ navigation }) {
             const response = await fetch(`${API_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ email, password, device_name: `${Platform.OS} ${Platform.Version}` })
             });
 
             const data = await response.json();
