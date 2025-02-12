@@ -1,4 +1,4 @@
-import { StyleSheet, Alert } from 'react-native'
+import { StyleSheet, Alert, Text, TouchableOpacity } from 'react-native'
 import React, { useState, useContext } from 'react'
 import Screen from '../components/Screen'
 import AppButton from '../components/AppButton'
@@ -7,9 +7,10 @@ import AppText from '../components/AppText'
 import routes from '../navigation/routes'
 import AuthContext from '../auth/context'
 import ErrorMessage from '../components/ErrorMessage'
+
 export default function RegisterScreen({ navigation }) {
     const [email, setEmail] = useState('')
-    const [name, setname] = useState('')
+    const [name, setName] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [registerError, setRegisterError] = useState(false)
@@ -18,7 +19,7 @@ export default function RegisterScreen({ navigation }) {
 
     const validateForms = () => {
         if (email === '' || password === '' || confirmPassword === '' || name === '') {
-            setErrorMessage("Please Fill In all your details")
+            setErrorMessage("Please fill in all your details")
             setRegisterError(true)
             return true
         }
@@ -35,7 +36,7 @@ export default function RegisterScreen({ navigation }) {
             return true
         }
 
-        if ((!/\S+@\S+\.\S+/.test(email))) {
+        if (!/\S+@\S+\.\S+/.test(email)) {
             setErrorMessage('Invalid email')
             setRegisterError(true)
             return true
@@ -70,7 +71,7 @@ export default function RegisterScreen({ navigation }) {
             ]);
     
             setEmail('');
-            setname('');
+            setName('');
             setPassword('');
             setConfirmPassword('');
         } catch (error) {
@@ -83,12 +84,11 @@ export default function RegisterScreen({ navigation }) {
         <Screen style={styles.container}>
             <AppText style={styles.heading}>Trans-Tracker</AppText>
             <ErrorMessage error={errorMessage} visible={registerError} />
-            <AppTextInput icon={'person'} placeholder={'name'}
+            <AppTextInput icon={'person'} placeholder={'Name'}
                 autoCorrect={false}
                 autoCapitalize="none"
-                name={'name'}
                 onChangeText={(text) => {
-                    setname(text)
+                    setName(text)
                     setRegisterError(false)
                 }}
                 value={name}
@@ -96,8 +96,8 @@ export default function RegisterScreen({ navigation }) {
             <AppTextInput
                 icon={'email'}
                 placeholder={'Email'}
-                keyBoardType={'email-address'}
-                name={'email'} autoCorrect={false}
+                keyboardType={'email-address'}
+                autoCorrect={false}
                 autoCapitalize="none"
                 onChangeText={(text) => {
                     setEmail(text)
@@ -112,7 +112,6 @@ export default function RegisterScreen({ navigation }) {
                 autoCorrect={false}
                 autoCapitalize="none"
                 secureTextEntry
-                name={'password'}
                 onChangeText={(text) => {
                     setPassword(text)
                     setRegisterError(false)
@@ -125,27 +124,41 @@ export default function RegisterScreen({ navigation }) {
                 autoCorrect={false}
                 autoCapitalize="none"
                 secureTextEntry
-                name={'confirm-password'}
                 value={confirmPassword}
                 onChangeText={(text) => {
                     setConfirmPassword(text)
                     setRegisterError(false)
                 }} />
             <AppButton title={'Register'} onPress={handleRegister} />
-            <AppButton title={'Log in'} onPress={() => navigation.navigate(routes.LOGIN)} />
+            
+            <TouchableOpacity onPress={() => navigation.navigate(routes.LOGIN)}>
+                <Text style={styles.loginText}>If you have an account, <Text style={styles.loginLink}>click here</Text></Text>
+            </TouchableOpacity>
         </Screen>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        padding: 10,
+        padding: 20,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        flex: 1,
+        backgroundColor: '#F8F9FA',
     },
     heading: {
-        fontSize: 25,
-        marginVertical: 10
+        fontSize: 28,
+        fontWeight: '600',
+        marginBottom: 20,
+        color: '#333',
+    },
+    loginText: {
+        fontSize: 16,
+        color: '#7C7C7C',
+        marginTop: 20,
+    },
+    loginLink: {
+        color: '#007AFF',
+        fontWeight: '500',
     }
-})
-//handle register with the following APL_URL http://192.168.1.106:8000
+});
