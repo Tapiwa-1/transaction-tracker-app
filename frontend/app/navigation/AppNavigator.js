@@ -1,5 +1,5 @@
 import { StyleSheet, Alert } from 'react-native';
-import React from 'react';
+import React, { useContext, useEffect } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialIcon from '../components/MaterialIcon';
 import routes from './routes';
@@ -7,25 +7,27 @@ import TransactionsScreen from '../screens/TransactionsScreen';
 
 import { useNavigation } from '@react-navigation/native';
 import authStorage from '../auth/authStorage';
+import AuthContext from '../auth/context'
+
 
 const Tab = createBottomTabNavigator();
 
 const LogoutScreen = () => {
     const navigation = useNavigation();
-
+    const authContext = useContext(AuthContext)
     React.useEffect(() => {
         const handleLogout = async () => {
             try {
                 await authStorage.removeToken(); // Remove the token
-
+                await fetch('http://192.168.1.106:8000/api/logout', {
+                    method: 'POST',
+                });
                 Alert.alert('Logged Out', 'You have been logged out successfully.', [
                     {
                         text: 'OK',
                         onPress: () => {
-                            navigation.reset({
-                                index: 0,
-                                routes: [{ name: routes.LOGIN }], // Reset stack to LOGIN screen
-                            });
+                            authContext.setUser(null)
+                            authStorage.removeToken()
                         },
                     },
                 ]);

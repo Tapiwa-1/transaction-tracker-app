@@ -11,13 +11,14 @@ import AuthContext from '../auth/context'
 import authStorage from '../auth/authStorage'
 
 
+
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loginError, setLoginError] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
     const authContext = useContext(AuthContext)
-    // const navigation = useNavigation()
+    
     const validateForms = () => {
         if (email === '' || password === '') {
             setErrorMessage("Please Fill In all your details")
@@ -48,8 +49,6 @@ export default function LoginScreen({ navigation }) {
             });
     
             const data = await response.json();
-
-            
     
             if (!response.ok) {
                 setErrorMessage(data.message || 'Login failed');
@@ -57,18 +56,21 @@ export default function LoginScreen({ navigation }) {
                 return;
             }
     
-            // Store the token using authStorage
-            authStorage.storeToken(data.token); // Store the token
+            // Store token and user details
+            await authStorage.storeToken(data.token);
+            authContext.setUser(data.user); // Update user in context
     
+            console.log('User Set',data.user);
             setEmail('');
             setPassword('');
-
-            navigation.navigate(routes.TRANSACTIONS );
+    
+    
         } catch (error) {
             setErrorMessage('Network error. Please try again.');
             setLoginError(true);
         }
     };
+    
     
 
     const handleRegister = async () => {

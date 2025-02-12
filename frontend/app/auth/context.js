@@ -1,5 +1,8 @@
-import React from "react";
+import { createContext } from 'react';
 
-const AuthContext = React.createContext()
+const AuthContext = createContext({
+    user: null,
+    setUser: () => {}, // Function to update the user
+});
 
-export default AuthContext
+export default AuthContext;

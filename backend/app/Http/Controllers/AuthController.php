@@ -47,7 +47,7 @@ class AuthController extends Controller
             $user = Auth::user();
             $token = $user->createToken('auth_token')->plainTextToken;
 
-            return response()->json(['token' => $token]);
+            return response()->json(['token' => $token,'user' => $user]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
