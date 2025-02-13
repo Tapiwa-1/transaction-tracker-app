@@ -130,6 +130,7 @@ export default function PhotosScreen() {
                         <Text style={styles.tableHeader}>Date</Text>
                         <Text style={styles.tableHeader}>Description</Text>
                         <Text style={styles.tableHeader}>Amount</Text>
+
                     </View>
                 }
             />
@@ -311,3 +312,4 @@ const styles = StyleSheet.create({
     },
 });
 
+//add a gradient blue arch on the top with a user name then a table below that 

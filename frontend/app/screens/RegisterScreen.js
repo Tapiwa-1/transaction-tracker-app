@@ -1,4 +1,4 @@
-import { StyleSheet, Alert, Text, TouchableOpacity, Platform } from 'react-native'
+import { StyleSheet, Alert, Text, TouchableOpacity, Platform, ActivityIndicator, Image } from 'react-native'
 import React, { useState, useContext } from 'react'
 import Screen from '../components/Screen'
 import AppButton from '../components/AppButton'
@@ -14,9 +14,9 @@ export default function RegisterScreen({ navigation }) {
     const [name, setName] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
-    const [device_name, setDeviceName] = useState('');
     const [registerError, setRegisterError] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
+    const [loading, setLoading] = useState(false) // Added state for loading spinner
     const authContext = useContext(AuthContext)
 
     const validateForms = () => {
@@ -47,7 +47,9 @@ export default function RegisterScreen({ navigation }) {
 
     const handleRegister = async () => {
         if (validateForms()) return;
-    
+
+        setLoading(true) // Start loading
+
         try {
             const response = await fetch(`${API_URL}/register`, {
                 method: 'POST',
@@ -58,22 +60,22 @@ export default function RegisterScreen({ navigation }) {
                     password,
                     password_confirmation: confirmPassword,
                     device_name: `${Platform.OS} ${Platform.Version}`
-                    
                 })
             });
-    
+
             const data = await response.json();
-    
+
             if (!response.ok) {
                 setErrorMessage(data.message || 'Registration failed');
                 setRegisterError(true);
+                setLoading(false); // Stop loading
                 return;
             }
-    
+
             Alert.alert('Success', 'Registration successful! Please log in.', [
                 { text: 'OK', onPress: () => navigation.navigate(routes.LOGIN) }
             ]);
-    
+
             setEmail('');
             setName('');
             setPassword('');
@@ -81,19 +83,24 @@ export default function RegisterScreen({ navigation }) {
         } catch (error) {
             setErrorMessage('Network error. Please try again.');
             setRegisterError(true);
+        } finally {
+            setLoading(false); // Stop loading
         }
     };
-    
+
     return (
         <Screen style={styles.container}>
-            <AppText style={styles.heading}>Trans-Tracker</AppText>
+            <Image source={require('../assets/logo.png')} style={styles.logo} />
             <ErrorMessage error={errorMessage} visible={registerError} />
-            <AppTextInput icon={'person'} placeholder={'Name'}
+
+            <AppTextInput 
+                icon={'person'} 
+                placeholder={'Name'}
                 autoCorrect={false}
                 autoCapitalize="none"
                 onChangeText={(text) => {
-                    setName(text)
-                    setRegisterError(false)
+                    setName(text);
+                    setRegisterError(false);
                 }}
                 value={name}
             />
@@ -104,8 +111,8 @@ export default function RegisterScreen({ navigation }) {
                 autoCorrect={false}
                 autoCapitalize="none"
                 onChangeText={(text) => {
-                    setEmail(text)
-                    setRegisterError(false)
+                    setEmail(text);
+                    setRegisterError(false);
                 }}
                 value={email}
             />
@@ -117,12 +124,13 @@ export default function RegisterScreen({ navigation }) {
                 autoCapitalize="none"
                 secureTextEntry
                 onChangeText={(text) => {
-                    setPassword(text)
-                    setRegisterError(false)
+                    setPassword(text);
+                    setRegisterError(false);
                 }}
                 value={password}
             />
-            <AppTextInput icon={'lock'}
+            <AppTextInput 
+                icon={'lock'}
                 placeholder={'Confirm Password'}
                 textContentType={'password'}
                 autoCorrect={false}
@@ -130,11 +138,17 @@ export default function RegisterScreen({ navigation }) {
                 secureTextEntry
                 value={confirmPassword}
                 onChangeText={(text) => {
-                    setConfirmPassword(text)
-                    setRegisterError(false)
-                }} />
-            <AppButton title={'Register'} onPress={handleRegister} />
+                    setConfirmPassword(text);
+                    setRegisterError(false);
+                }} 
+            />
             
+            {loading ? (
+                <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />
+            ) : (
+                <AppButton title={'Register'} onPress={handleRegister} disabled={loading} />
+            )}
+
             <TouchableOpacity onPress={() => navigation.navigate(routes.LOGIN)}>
                 <Text style={styles.loginText}>If you have an account, <Text style={styles.loginLink}>click here</Text></Text>
             </TouchableOpacity>
@@ -156,6 +170,12 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         color: '#333',
     },
+    logo: {
+        width: 150,
+        height: 150,
+        resizeMode: 'contain',
+        marginBottom: 20,
+    },
     loginText: {
         fontSize: 16,
         color: '#7C7C7C',
@@ -164,5 +184,10 @@ const styles = StyleSheet.create({
     loginLink: {
         color: '#007AFF',
         fontWeight: '500',
+    },
+    loader: {
+        marginVertical: 10,
     }
 });
+
+//re

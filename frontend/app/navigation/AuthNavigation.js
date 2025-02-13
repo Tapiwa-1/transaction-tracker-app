@@ -13,7 +13,9 @@ const AuthNavigation = () => {
             <Stack.Screen name={routes.LOGIN} component={LoginScreen} options={{
                 headerShown: false
             }} />
-            <Stack.Screen name={routes.REGISTER} component={RegisterScreen} />
+            <Stack.Screen name={routes.REGISTER} component={RegisterScreen}options={{
+                headerShown: false
+            }} />
 
         </Stack.Navigator>
     )
