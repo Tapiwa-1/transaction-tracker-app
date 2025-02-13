@@ -210,6 +210,7 @@ export default function PhotosScreen() {
                             <Text style={styles.detailsText}>Description: {selectedTransaction.description}</Text>
                             <Text style={styles.detailsText}>Amount: ${selectedTransaction.amount}</Text>
 
+
                             <View style={styles.modalButtons}>
                                 <Button title="Delete" color="red" onPress={() => handleDeleteTransaction(selectedTransaction.id)} />
                             </View>
@@ -232,6 +233,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         textAlign: 'center',
     },
+
     tableHeaderContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -312,4 +314,3 @@ const styles = StyleSheet.create({
     },
 });
 
-//add a gradient blue arch on the top with a user name then a table below that 
